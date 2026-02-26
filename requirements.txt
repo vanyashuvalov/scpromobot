@@ -16,11 +16,12 @@ psycopg2-binary==2.9.9  # PostgreSQL adapter
 SQLAlchemy==2.0.23  # ORM (optional, for easier DB management)
 
 # ============================================
-# Video/Audio Processing
+# Video/Audio Processing (will be added in Phase 3)
 # ============================================
-moviepy==1.0.3
-Pillow==10.1.0
-pydub==0.25.1
+# moviepy==1.0.3
+# Pillow>=10.0.0
+# pydub==0.25.1
+# Note: Uncomment when implementing video generation
 # ffmpeg is required but installed separately on Render
 
 # ============================================
@@ -36,11 +37,11 @@ requests==2.31.0  # For downloading public Google Sheets
 cryptography==41.0.7
 
 # ============================================
-# API Clients
+# API Clients (will be added in Phase 2-3)
 # ============================================
-requests==2.31.0
-aiohttp==3.9.1
-google-generativeai==0.3.2  # Google Gemini API
+# aiohttp==3.9.1
+# google-generativeai==0.3.2  # Google Gemini API
+# Note: Uncomment when implementing video generation
 
 # ============================================
 # Utilities

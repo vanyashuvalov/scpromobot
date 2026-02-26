@@ -12,12 +12,24 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn bot:app --bind 0.0.0.0:$PORT --workers 2 --timeout 600
     healthCheckPath: /health
+    
+    # Python version specification
+    runtime: python
+    
     envVars:
       # Telegram Bot Configuration
       - key: TELEGRAM_BOT_TOKEN
         sync: false  # Set manually in Render dashboard
       
-      # API Keys (set in Render dashboard for security)
+      # Google Sheets Configuration
+      - key: GOOGLE_SHEETS_ID
+        sync: false
+      - key: GOOGLE_SHEETS_TAB_NAME
+        value: Sheet1
+      - key: SHEETS_CACHE_DURATION
+        value: 300
+      
+      # API Keys (set in Render dashboard for security) - Phase 2-3
       - key: GEMINI_API_KEY
         sync: false
       - key: ELEVENLABS_API_KEY
@@ -25,52 +37,66 @@ services:
       - key: GROK_VIDEO_API_KEY
         sync: false
       
-      # Database URL (auto-populated by Render PostgreSQL)
-      - key: DATABASE_URL
-        fromDatabase:
-          name: viral-rapper-db
-          property: connectionString
+      # Database URL (auto-populated by Render PostgreSQL) - Phase 4
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: viral-rapper-db
+      #     property: connectionString
       
-      # Encryption Key for API keys in database
-      - key: ENCRYPTION_KEY
-        generateValue: true  # Auto-generate secure key
+      # Encryption Key for API keys in database - Phase 4
+      # - key: ENCRYPTION_KEY
+      #   generateValue: true  # Auto-generate secure key
       
       # Python Environment
       - key: PYTHON_VERSION
         value: 3.11.0
       
+      # Application Configuration
+      - key: ENVIRONMENT
+        value: production
+      
+      # Webhook URL (set after deployment)
+      - key: WEBHOOK_URL
+        sync: false
+      
       # Render Specific
       - key: RENDER
         value: true
     
-    # Persistent Disk for tracks, temp files, output videos
-    disk:
-      name: viral-rapper-data
-      mountPath: /opt/render/project/data
-      sizeGB: 1  # Free tier: 1GB persistent storage
+    # Persistent Disk for tracks, temp files, output videos - Phase 3
+    # disk:
+    #   name: viral-rapper-data
+    #   mountPath: /opt/render/project/data
+    #   sizeGB: 1  # Free tier: 1GB persistent storage
 
-# PostgreSQL Database: User Settings Storage
-databases:
-  - name: viral-rapper-db
-    databaseName: viral_rapper
-    plan: free  # Free tier: 90 days, then $7/month (or migrate to external)
-    region: frankfurt
-    ipAllowList: []  # Allow all IPs (or restrict to Render IPs)
+# PostgreSQL Database: User Settings Storage - Phase 4
+# databases:
+#   - name: viral-rapper-db
+#     databaseName: viral_rapper
+#     plan: free  # Free tier: 90 days, then $7/month (or migrate to external)
+#     region: frankfurt
+#     ipAllowList: []  # Allow all IPs (or restrict to Render IPs)
 
 # Notes:
-# 1. Free tier limitations:
+# 1. Phase 1 (Current): Basic bot with Google Sheets integration
+#    - No video generation yet
+#    - No database yet
+#    - No persistent disk yet
+#
+# 2. Free tier limitations:
 #    - Web service sleeps after 15 min inactivity (webhook wakes it up)
-#    - 512MB RAM (sufficient for basic video generation)
+#    - 512MB RAM (sufficient for bot without video generation)
 #    - 750 hours/month (enough for 24/7 if only 1 service)
-#    - PostgreSQL free for 90 days, then $7/month
 #
-# 2. After deployment:
+# 3. After deployment:
 #    - Set environment variables in Render dashboard
-#    - Run database migrations: `python -m modules.settings_manager migrate`
 #    - Set Telegram webhook: curl https://your-app.onrender.com/set_webhook
-#    - Upload rappers.csv and MP3 tracks to persistent disk
 #
-# 3. Scaling options:
-#    - Upgrade to Starter plan ($7/month) for always-on service
-#    - Add Redis for state management (external service)
-#    - Use external storage (S3, Cloudinary) for videos if disk fills up
+# 4. Phase 2-3 (Video Generation):
+#    - Uncomment video processing dependencies in requirements.txt
+#    - Uncomment persistent disk configuration
+#    - May need to upgrade to Starter plan ($7/month) for more RAM
+#
+# 5. Phase 4 (Settings):
+#    - Uncomment PostgreSQL database configuration
+#    - Run database migrations
