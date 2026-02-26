@@ -1,0 +1,49 @@
+# Requirements for Viral Rapper Pipeline
+# Version: 1.0
+# Python 3.11+
+
+# ============================================
+# Web Framework & Telegram Bot
+# ============================================
+Flask==3.0.0
+python-telegram-bot==20.7
+gunicorn==21.2.0
+
+# ============================================
+# Database
+# ============================================
+psycopg2-binary==2.9.9  # PostgreSQL adapter
+SQLAlchemy==2.0.23  # ORM (optional, for easier DB management)
+
+# ============================================
+# Video/Audio Processing
+# ============================================
+moviepy==1.0.3
+Pillow==10.1.0
+pydub==0.25.1
+# ffmpeg is required but installed separately on Render
+
+# ============================================
+# Data Handling
+# ============================================
+pandas==2.1.4
+python-dotenv==1.0.0
+requests==2.31.0  # For downloading public Google Sheets
+
+# ============================================
+# Security
+# ============================================
+cryptography==41.0.7
+
+# ============================================
+# API Clients
+# ============================================
+requests==2.31.0
+aiohttp==3.9.1
+google-generativeai==0.3.2  # Google Gemini API
+
+# ============================================
+# Utilities
+# ============================================
+python-dateutil==2.8.2
+pytz==2023.3
